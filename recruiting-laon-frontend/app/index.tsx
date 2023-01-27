@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/auth'
+import { MiddlewareType, useAuth } from '@/hooks/auth'
 
 export default function Home() {
-    const { user } = useAuth({ middleware: 'guest' })
+    const { user } = useAuth({ middleware: MiddlewareType.Guest })
 
     return (
         <>
@@ -173,8 +173,8 @@ export default function Home() {
 
                                 <div className="ml-12">
                                     <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                        Laravel's robust library of first-party
-                                        tools and libraries, such as{' '}
+                                        Laravel&apos;s robust library of
+                                        first-party tools and libraries, such as{' '}
                                         <a
                                             href="https://forge.laravel.com"
                                             className="underline">

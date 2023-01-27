@@ -3,10 +3,53 @@ import axios from '@/lib/axios'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
+export enum MiddlewareType {
+    Guest,
+    Auth,
+}
+
+export interface UseAuthParams {
+    middleware?: MiddlewareType
+    redirectIfAuthenticated?: string
+}
+
+interface WithSetError {
+    setErrors: (data: any) => void
+}
+
+interface WithSetStatus {
+    setStatus: (data: any) => void
+}
+
+export interface AnyProps {
+    [x: string]: any
+}
+
+export interface LoginProps extends AnyProps {}
+export interface RegisterProps extends AnyProps {}
+export interface ResetPasswordProps extends AnyProps {}
+
+export interface ForgotPasswordProps {
+    email: string
+}
+
+export interface AuthUser {
+    name: string
+    email: string
+    email_verified_at: string
+}
+
+export const useAuth = ({
+    middleware,
+    redirectIfAuthenticated,
+}: UseAuthParams = {}) => {
     const router = useRouter()
 
-    const { data: user, error, mutate } = useSWR('/api/user', () =>
+    const {
+        data: user,
+        error,
+        mutate,
+    } = useSWR<AuthUser>('/api/user', () =>
         axios
             .get('/api/user')
             .then(res => res.data)
@@ -19,7 +62,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const register = async ({ setErrors, ...props }) => {
+    const register = async ({
+        setErrors,
+        ...props
+    }: RegisterProps & WithSetError) => {
         await csrf()
 
         setErrors([])
@@ -34,7 +80,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const login = async ({ setErrors, setStatus, ...props }) => {
+    const login = async ({
+        setErrors,
+        setStatus,
+        ...props
+    }: AnyProps & WithSetError & WithSetStatus) => {
         await csrf()
 
         setErrors([])
@@ -50,7 +100,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const forgotPassword = async ({ setErrors, setStatus, email }) => {
+    const forgotPassword = async ({
+        setErrors,
+        setStatus,
+        email,
+    }: ForgotPasswordProps & WithSetError & WithSetStatus) => {
         await csrf()
 
         setErrors([])
@@ -66,7 +120,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const resetPassword = async ({ setErrors, setStatus, ...props }) => {
+    const resetPassword = async ({
+        setErrors,
+        setStatus,
+        ...props
+    }: ResetPasswordProps) => {
         await csrf()
 
         setErrors([])
@@ -84,14 +142,14 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const resendEmailVerification = ({ setStatus }) => {
+    const resendEmailVerification = ({ setStatus }: WithSetStatus) => {
         axios
             .post('/email/verification-notification')
             .then(response => setStatus(response.data.status))
     }
 
     const logout = async () => {
-        if (! error) {
+        if (!error) {
             await axios.post('/logout').then(() => mutate())
         }
 
@@ -99,15 +157,23 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     }
 
     useEffect(() => {
-        if (middleware === 'guest' && redirectIfAuthenticated && user)
-            router.push(redirectIfAuthenticated)
-        if (
-            window.location.pathname === '/verify-email' &&
-            user?.email_verified_at
-        )
-            router.push(redirectIfAuthenticated)
-        if (middleware === 'auth' && error) logout()
-    }, [user, error])
+        if (redirectIfAuthenticated) {
+            if (middleware === MiddlewareType.Guest && user) {
+                router.push(redirectIfAuthenticated)
+            }
+
+            if (
+                window.location.pathname === '/verify-email' &&
+                user?.email_verified_at
+            ) {
+                router.push(redirectIfAuthenticated)
+            }
+        }
+
+        if (middleware === MiddlewareType.Auth && error) {
+            logout()
+        }
+    })
 
     return {
         user,

@@ -1,6 +1,7 @@
 import Head from 'next/head'
+import { PropsWithChildren } from 'react'
 
-const GuestLayout = ({ children }) => {
+const GuestLayout = ({ children }: PropsWithChildren<{}>) => {
     return (
         <div>
             <Head>

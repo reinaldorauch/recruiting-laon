@@ -1,20 +1,21 @@
-import React, { useState } from 'react'
+import { Fragment, PropsWithChildren, ReactNode, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
+
+export interface DropdownProps {
+    align?: 'right' | 'left' | 'top'
+    width?: string
+    contentClasses?: string
+    trigger: ReactNode
+}
 
 const Dropdown = ({
     align = 'right',
-    width = 48,
+    width = 'w-48',
     contentClasses = 'py-1 bg-white',
     trigger,
     children,
-}) => {
-    let alignmentClasses
-
-    switch (width) {
-        case '48':
-            width = 'w-48'
-            break
-    }
+}: PropsWithChildren<DropdownProps>) => {
+    let alignmentClasses = 'origin-top-right right-0'
 
     switch (align) {
         case 'left':
@@ -22,10 +23,6 @@ const Dropdown = ({
             break
         case 'top':
             alignmentClasses = 'origin-top'
-            break
-        case 'right':
-        default:
-            alignmentClasses = 'origin-top-right right-0'
             break
     }
 
@@ -35,7 +32,7 @@ const Dropdown = ({
         <Menu as="div" className="relative">
             {({ open }) => (
                 <>
-                    <Menu.Button as={React.Fragment}>{trigger}</Menu.Button>
+                    <Menu.Button as={Fragment}>{trigger}</Menu.Button>
 
                     <Transition
                         show={open}

@@ -1,8 +1,13 @@
 import Navigation from '@/components/Layouts/Navigation'
-import { useAuth } from '@/hooks/auth'
+import { MiddlewareType, useAuth } from '@/hooks/auth'
+import { PropsWithChildren, ReactNode } from 'react'
 
-const AppLayout = ({ header, children }) => {
-    const { user } = useAuth({ middleware: 'auth' })
+export interface AppLayoutProps {
+    header: ReactNode
+}
+
+const AppLayout = ({ header, children }: PropsWithChildren<AppLayoutProps>) => {
+    const { user } = useAuth({ middleware: MiddlewareType.Auth })
 
     return (
         <div className="min-h-screen bg-gray-100">

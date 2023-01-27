@@ -3,12 +3,12 @@ import AuthCard from '@/components/AuthCard'
 import Button from '@/components/Button'
 import GuestLayout from '@/components/Layouts/GuestLayout'
 import Link from 'next/link'
-import { useAuth } from '@/hooks/auth'
+import { MiddlewareType, useAuth } from '@/hooks/auth'
 import { useState } from 'react'
 
 const VerifyEmail = () => {
     const { logout, resendEmailVerification } = useAuth({
-        middleware: 'auth',
+        middleware: MiddlewareType.Auth,
         redirectIfAuthenticated: '/dashboard',
     })
 
@@ -22,12 +22,11 @@ const VerifyEmail = () => {
                         <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
                     </Link>
                 }>
-
                 <div className="mb-4 text-sm text-gray-600">
                     Thanks for signing up! Before getting started, could you
                     verify your email address by clicking on the link we just
-                    emailed to you? If you didn't receive the email, we will
-                    gladly send you another.
+                    emailed to you? If you didn&apos;t receive the email, we
+                    will gladly send you another.
                 </div>
 
                 {status === 'verification-link-sent' && (

@@ -1,4 +1,13 @@
-const Input = ({ disabled = false, className, ...props }) => (
+import { DetailedHTMLProps, InputHTMLAttributes } from 'react'
+
+const Input = ({
+    disabled = false,
+    className = '',
+    ...props
+}: DetailedHTMLProps<
+    InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+>) => (
     <input
         disabled={disabled}
         className={`${className} rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50`}
