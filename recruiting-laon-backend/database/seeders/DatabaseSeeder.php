@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\MediaContentType;
+use App\Models\MediaType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,11 +17,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // Default media types
+        MediaType::create(['id' => 1, 'description' => 'Filme']);
+        MediaType::create(['id' => 2, 'description' => 'Serie']);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        MediaContentType::create(['id' => 1, 'description' => 'Trailer']);
+        MediaContentType::create(['id' => 2, 'description' => 'Feature Film']);
+        MediaContentType::create(['id' => 3, 'description' => 'Episodio']);
+        MediaContentType::create(['id' => 4, 'description' => 'Extra']);
+        MediaContentType::create(['id' => 5, 'description' => 'Making Off']);
     }
 }
